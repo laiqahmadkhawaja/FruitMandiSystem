@@ -134,8 +134,10 @@ function get_party_balance($party_id, $up_to_date = null) {
         $stmt->execute($params);
         $total_cr += (float)$stmt->fetchColumn();
 
-        // Freight paid by commission agent on arrival adds to Debit (نام)
-        $freight_sql = "SELECT COALESCE(SUM(freight_paid_by_agent + local_cartage), 0) FROM `maal_amad` WHERE farmer_id = :party_id " .
+        // Freight paid by commission agent on arrival adds to Debit (نام) ONLY for unbilled lots
+        // (Once zamindar_bill is posted, freight is already subtracted from net_payable)
+        $freight_sql = "SELECT COALESCE(SUM(freight_paid_by_agent + local_cartage), 0) FROM `maal_amad` 
+                        WHERE farmer_id = :party_id AND bill_posted = 0 " .
                        ($up_to_date ? " AND amad_date <= :up_to_date " : "");
         $stmt = $pdo->prepare($freight_sql);
         $stmt->execute($params);
@@ -197,19 +199,21 @@ function get_cash_in_hand($date = null) {
     $w_date_sql = $date ? " AND date <= " . $pdo->quote($date) : "";
 
     // Cash Inflows:
-    // 1. Receipts in cash
+    // 1. Receipts in cash from vouchers (includes cash sales with voucher)
     $r_stmt = $pdo->query("SELECT COALESCE(SUM(amount), 0) FROM `vouchers` WHERE type = 'receipt' AND payment_method = 'cash' $v_date_sql");
     $receipts = (float)$r_stmt->fetchColumn();
 
-    // 2. Cash sales
-    $cs_stmt = $pdo->query("SELECT COALESCE(SUM(net_amount), 0) FROM `sales_bills` WHERE is_paid = 1 $s_date_sql");
-    $cash_sales = (float)$cs_stmt->fetchColumn();
+    // 2. Any cash sales without a corresponding voucher (prevents double counting while capturing unvouchered sales)
+    $cs_stmt = $pdo->query("SELECT COALESCE(SUM(s.net_amount), 0) FROM `sales_bills` s 
+        LEFT JOIN `vouchers` v ON v.voucher_no = CONCAT('RCP-', s.bill_no) 
+        WHERE s.is_paid = 1 AND v.id IS NULL $s_date_sql");
+    $unvouchered_cash_sales = (float)$cs_stmt->fetchColumn();
 
     // 3. Bazar Wasooli (morning + evening)
     $bw_stmt = $pdo->query("SELECT COALESCE(SUM(morning_amount + evening_amount), 0) FROM `bazar_wasooli` WHERE 1=1 $w_date_sql");
     $bazar_wasooli = (float)$bw_stmt->fetchColumn();
 
-    $total_in = $receipts + $cash_sales + $bazar_wasooli;
+    $total_in = $receipts + $unvouchered_cash_sales + $bazar_wasooli;
 
     // Cash Outflows:
     // 1. Payments in cash

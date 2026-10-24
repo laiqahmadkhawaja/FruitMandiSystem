@@ -22,11 +22,12 @@ $r_stmt = $pdo->prepare("SELECT v.*, p.urdu_name as party_name
 $r_stmt->execute([$date]);
 $cash_receipts = $r_stmt->fetchAll();
 
-// Cash Sales
+// Cash Sales without duplicate voucher
 $cs_stmt = $pdo->prepare("SELECT s.*, p.urdu_name as customer_name 
     FROM `sales_bills` s 
     JOIN `parties` p ON s.customer_id = p.id 
-    WHERE s.sale_date = ? AND s.is_paid = 1");
+    LEFT JOIN `vouchers` v ON v.voucher_no = CONCAT('RCP-', s.bill_no)
+    WHERE s.sale_date = ? AND s.is_paid = 1 AND v.id IS NULL");
 $cs_stmt->execute([$date]);
 $cash_sales = $cs_stmt->fetchAll();
 
@@ -46,11 +47,11 @@ $p_stmt = $pdo->prepare("SELECT v.*, p.urdu_name as party_name
 $p_stmt->execute([$date]);
 $cash_payments = $p_stmt->fetchAll();
 
-// Daily Expenses
+// Daily Expenses (Cash only)
 $e_stmt = $pdo->prepare("SELECT v.*, p.urdu_name as party_name 
     FROM `vouchers` v 
     LEFT JOIN `parties` p ON v.party_id = p.id 
-    WHERE v.voucher_date = ? AND v.type = 'daily_expense'");
+    WHERE v.voucher_date = ? AND v.type = 'daily_expense' AND v.payment_method = 'cash'");
 $e_stmt->execute([$date]);
 $daily_expenses = $e_stmt->fetchAll();
 

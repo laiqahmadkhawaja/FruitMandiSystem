@@ -55,10 +55,10 @@ if ($party['type'] === 'farmer') {
     $zb_stmt->execute([$party_id, $from_date, $to_date]);
     $ledger_lines = array_merge($ledger_lines, $zb_stmt->fetchAll());
 
-    // Freight paid on arrival
+    // Freight paid on arrival (Only for unbilled lots, since billed lots have freight deducted on the bill)
     $f_stmt = $pdo->prepare("SELECT amad_date as date, challan_no as ref, CONCAT('گاڑی کرایہ ادائیگی لاٹ ', marke) as details, (freight_paid_by_agent + local_cartage) as dr, 0 as cr 
         FROM `maal_amad` 
-        WHERE farmer_id = ? AND (freight_paid_by_agent > 0 OR local_cartage > 0) AND amad_date BETWEEN ? AND ?");
+        WHERE farmer_id = ? AND bill_posted = 0 AND (freight_paid_by_agent > 0 OR local_cartage > 0) AND amad_date BETWEEN ? AND ?");
     $f_stmt->execute([$party_id, $from_date, $to_date]);
     $ledger_lines = array_merge($ledger_lines, $f_stmt->fetchAll());
 }

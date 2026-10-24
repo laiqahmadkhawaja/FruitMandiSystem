@@ -66,9 +66,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } elseif ($post_action === 'delete_party') {
         $del_id = (int)$_POST['id'];
-        $stmt = $pdo->prepare("DELETE FROM `parties` WHERE `id` = ?");
-        $stmt->execute([$del_id]);
-        flash_set("کھاتہ کامیابی سے حذف کر دیا گیا۔", 'warning');
+        
+        // Safety verification: check for existing financial transactions
+        $has_sales = (int)$pdo->prepare("SELECT COUNT(*) FROM `sales_bills` WHERE customer_id = ?")->execute([$del_id]) ? $pdo->query("SELECT COUNT(*) FROM `sales_bills` WHERE customer_id = $del_id")->fetchColumn() : 0;
+        $has_amad = (int)$pdo->query("SELECT COUNT(*) FROM `maal_amad` WHERE farmer_id = $del_id")->fetchColumn();
+        $has_vouchers = (int)$pdo->query("SELECT COUNT(*) FROM `vouchers` WHERE party_id = $del_id")->fetchColumn();
+        $has_zb = (int)$pdo->query("SELECT COUNT(*) FROM `zamindar_bills` WHERE farmer_id = $del_id")->fetchColumn();
+        $has_wasooli = (int)$pdo->query("SELECT COUNT(*) FROM `bazar_wasooli` WHERE customer_id = $del_id")->fetchColumn();
+
+        if ($has_sales > 0 || $has_amad > 0 || $has_vouchers > 0 || $has_zb > 0 || $has_wasooli > 0) {
+            flash_set("خرابی: اس کھاتہ دار کے نام پر کاروباری ریکارڈ (سیلز بل، مال آمد، فرد حساب یا واؤچرز) موجود ہیں۔ حسابی درستگی کے پیش نظر اسے ڈیلیٹ نہیں کیا جا سکتا۔ آپ اسے ایڈٹ کر کے غیر فعال (Inactive) کر سکتے ہیں۔", 'danger');
+        } else {
+            $stmt = $pdo->prepare("DELETE FROM `parties` WHERE `id` = ?");
+            $stmt->execute([$del_id]);
+            flash_set("کھاتہ کامیابی سے حذف کر دیا گیا۔", 'warning');
+        }
         header("Location: parties.php");
         exit;
     }

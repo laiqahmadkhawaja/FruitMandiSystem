@@ -179,8 +179,9 @@ foreach ($wasooli_rows as $w) {
         <?php 
         $t_prev = 0; $t_sales = 0; $t_m = 0; $t_e = 0; $t_close = 0;
         $i = 1;
+        $prev_date = date('Y-m-d', strtotime($date . ' -1 day'));
         foreach ($customers as $c):
-            $bal = get_party_balance($c['id']);
+            $bal = get_party_balance($c['id'], $prev_date);
             $prev = $bal['balance'];
             $sale = (float)($sales_map[$c['id']] ?? 0);
             $m = (float)($wasooli_map[$c['id']]['morning_amount'] ?? 0);

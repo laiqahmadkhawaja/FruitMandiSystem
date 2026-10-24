@@ -31,6 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ON DUPLICATE KEY UPDATE `morning_amount` = VALUES(`morning_amount`), `evening_amount` = VALUES(`evening_amount`)");
                 $stmt->execute([$p_date, $cust_id, $m_val, $e_val]);
                 $saved_count++;
+            } else {
+                // If set to 0, clear any previous record so mistakes can be corrected
+                $del = $pdo->prepare("DELETE FROM `bazar_wasooli` WHERE `date` = ? AND `customer_id` = ?");
+                $del->execute([$p_date, $cust_id]);
             }
         }
 
@@ -167,8 +171,10 @@ if ($filter_mode === 'with_sales') {
                         <tr><td colspan="9" class="text-center text-muted py-5">کوئی ریکارڈ نہیں ملا</td></tr>
                     <?php else: 
                         $counter = 1;
+                        $prev_date = date('Y-m-d', strtotime($date . ' -1 day'));
                         foreach ($customers as $cust):
-                            $bal_info = get_party_balance($cust['id']);
+                            // Previous Balance strictly BEFORE $date
+                            $bal_info = get_party_balance($cust['id'], $prev_date);
                             $prev_balance = $bal_info['balance'];
                             $sale_amt = (float)($today_sales_map[$cust['id']] ?? 0);
                             $m_val = (float)($wasooli_map[$cust['id']]['morning_amount'] ?? 0);
