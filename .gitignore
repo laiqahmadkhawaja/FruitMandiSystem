@@ -1,0 +1,16 @@
+# Media & Video files (Large WhatsApp video)
+*.mp4
+*.mov
+*.avi
+*.wav
+*.mkv
+
+# Local database backups
+backups/*.sql
+backups/*.gz
+
+# OS & Editor
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/
