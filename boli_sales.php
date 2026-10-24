@@ -275,6 +275,9 @@ foreach ($sales_list as $row) {
                                     <?php endif; ?>
                                 </td>
                                 <td class="text-center">
+                                    <a href="print_sale_bill.php?id=<?= $row['id'] ?>" target="_blank" class="btn btn-sm btn-outline-primary me-1" title="پرنٹ پرچہ خریدار">
+                                        <i class="fa-solid fa-print"></i>
+                                    </a>
                                     <?php 
                                     $wa_msg = "محترم " . $row['customer_name'] . "، آپ کا فروخت پرچہ بل #" . $row['bill_no'] . " تاریخ " . format_dt($row['sale_date']) . "، جنس: " . $row['item_name'] . "، مارکہ: " . $row['marke'] . "، تعداد: " . $row['nag'] . " نگ، ریٹ: Rs. " . format_rs($row['rate']) . "، کل رقم: Rs. " . format_rs($row['net_amount']) . "۔ شکریہ: " . $settings['shop_name'];
                                     ?>

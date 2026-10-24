@@ -76,9 +76,9 @@ foreach ($stock_rows as $r) {
                 </select>
             </div>
 
-            <button type="button" onclick="window.print()" class="btn btn-sm btn-outline-secondary">
+            <a href="print_stock.php?item_id=<?= $item_filter ?>&status=<?= urlencode($status_filter) ?>" target="_blank" class="btn btn-sm btn-outline-success">
                 <i class="fa-solid fa-print"></i> پرنٹ سٹاک
-            </button>
+            </a>
         </form>
     </div>
 

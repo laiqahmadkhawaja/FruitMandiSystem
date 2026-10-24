@@ -64,9 +64,9 @@ $customers = $stmt->fetchAll();
                 <label class="form-check-label small fw-bold" for="showNil">صفر (0) بیلنس بھی دکھائیں</label>
             </div>
 
-            <button type="button" onclick="window.print()" class="btn btn-sm btn-outline-secondary ms-auto">
-                <i class="fa-solid fa-print"></i> چٹھہ پرنٹ کریں
-            </button>
+            <a href="print_chittha.php?city=<?= urlencode($city_filter) ?>&officer=<?= urlencode($officer_filter) ?>&show_nil=<?= $show_nil ? 'yes' : 'no' ?>" target="_blank" class="btn btn-sm btn-outline-success ms-auto">
+                <i class="fa-solid fa-print"></i> چٹھہ پرنٹ پیج کھولیں
+            </a>
         </form>
     </div>
 

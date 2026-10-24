@@ -205,9 +205,9 @@ $all_bills = $pdo->query("SELECT zb.*, p.urdu_name as farmer_name, m.challan_no,
 
             <!-- Action buttons -->
             <div class="mt-4 text-center no-print d-flex gap-2 justify-content-center">
-                <button onclick="window.print()" class="btn btn-primary px-4">
+                <a href="print_zamindar_bill.php?id=<?= $saved_bill['id'] ?>" target="_blank" class="btn btn-primary px-4">
                     <i class="fa-solid fa-print"></i> پرنٹ بل نکالیں
-                </button>
+                </a>
                 <?php 
                 $wa_msg = "محترم زمیندار صاحب (" . $saved_bill['farmer_name'] . ")، آپ کی لاٹ مارکہ " . $saved_bill['marke'] . " (چالان #" . $saved_bill['challan_no'] . ") کا فردِ حساب تیار ہے۔ کل فروخت: Rs. " . format_rs($saved_bill['gross_sale_amount']) . "، تمام کٹوتیاں نکال کر صافی رقم: Rs. " . format_rs($saved_bill['net_payable']) . "۔ شکریہ: " . $settings['shop_name'];
                 ?>
@@ -420,8 +420,11 @@ function recalcNet() {
                         <td class="text-end rubik-font text-danger">Rs. <?= format_rs($b['commission_amount']) ?></td>
                         <td class="text-end rubik-font fw-bold text-success fs-6">Rs. <?= format_rs($b['net_payable']) ?></td>
                         <td class="text-center">
-                            <a href="zamindar_bill.php?bill_id=<?= $b['id'] ?>" class="btn btn-sm btn-outline-primary">
+                            <a href="zamindar_bill.php?bill_id=<?= $b['id'] ?>" class="btn btn-sm btn-outline-primary" title="دیکھیں">
                                 <i class="fa-solid fa-eye"></i> بل دیکھیں
+                            </a>
+                            <a href="print_zamindar_bill.php?id=<?= $b['id'] ?>" target="_blank" class="btn btn-sm btn-outline-success ms-1" title="پرنٹ نکالیں">
+                                <i class="fa-solid fa-print"></i> پرنٹ
                             </a>
                         </td>
                     </tr>

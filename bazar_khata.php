@@ -128,6 +128,10 @@ if ($filter_mode === 'with_sales') {
                 <input type="radio" class="btn-check" name="filter_mode" id="btnradio4" value="with_sales" <?= $filter_mode === 'with_sales' ? 'checked' : '' ?> onchange="this.form.submit()">
                 <label class="btn btn-outline-secondary" for="btnradio4">صرف آج کی فروخت</label>
             </div>
+
+            <a href="print_bazar_khata.php?date=<?= urlencode($date) ?>&city=<?= urlencode($city_filter) ?>&filter_mode=<?= urlencode($filter_mode) ?>" target="_blank" class="btn btn-sm btn-outline-success ms-auto">
+                <i class="fa-solid fa-print"></i> پرنٹ پیج کھولیں
+            </a>
         </form>
     </div>
 
@@ -245,9 +249,9 @@ if ($filter_mode === 'with_sales') {
                 <span class="text-muted small">کی بورڈ شارٹ کٹ: اینٹر دبا کر اگلے کسٹمر کی وصولی پر جائیں۔</span>
             </div>
             <div class="d-flex gap-2">
-                <button type="button" onclick="window.print()" class="btn btn-outline-secondary">
+                <a href="print_bazar_khata.php?date=<?= urlencode($date) ?>&city=<?= urlencode($city_filter) ?>&filter_mode=<?= urlencode($filter_mode) ?>" target="_blank" class="btn btn-outline-secondary">
                     <i class="fa-solid fa-print"></i> پرنٹ بازار کھاتہ
-                </button>
+                </a>
                 <button type="submit" class="btn btn-mandi-primary px-4 py-2 fs-5">
                     <i class="fa-solid fa-floppy-disk"></i> وصولی محفوظ کریں (Save All Recovery)
                 </button>

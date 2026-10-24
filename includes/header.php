@@ -468,10 +468,16 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
             <!-- 9. Reports Dropdown -->
             <div class="dropdown">
-                <a class="nav-item-btn dropdown-toggle <?= in_array($current_page, ['zamindar_bill.php', 'ledgers.php', 'stock_report.php', 'daily_summary.php']) ? 'active' : '' ?>" href="#" role="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                <a class="nav-item-btn dropdown-toggle <?= in_array($current_page, ['reports.php', 'zamindar_bill.php', 'ledgers.php', 'stock_report.php', 'daily_summary.php']) ? 'active' : '' ?>" href="#" role="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                     <i class="fa-solid fa-chart-pie"></i> رپورٹس
                 </a>
                 <ul class="dropdown-menu dropdown-menu-mandi text-end shadow" data-bs-popper="static">
+                    <li>
+                        <a class="dropdown-item fw-bold" href="<?= BASE_URL ?>reports.php" style="background: #f0fdf4;">
+                            <i class="fa-solid fa-print text-success"></i> تمام رپورٹس و پرنٹ سنٹر
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
                     <li>
                         <a class="dropdown-item" href="<?= BASE_URL ?>zamindar_bill.php">
                             <i class="fa-solid fa-file-invoice-dollar text-success"></i> زمیندار بل (فردِ حساب)

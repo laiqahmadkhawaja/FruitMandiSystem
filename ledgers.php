@@ -121,9 +121,9 @@ if ($party_id > 0) {
             <button type="submit" class="btn btn-sm btn-primary">دیکھیں</button>
 
             <?php if ($selected_party): ?>
-                <button type="button" onclick="window.print()" class="btn btn-sm btn-outline-secondary">
+                <a href="print_ledger.php?party_id=<?= $party_id ?>&from_date=<?= urlencode($from_date) ?>&to_date=<?= urlencode($to_date) ?>" target="_blank" class="btn btn-sm btn-outline-success">
                     <i class="fa-solid fa-print"></i> پرنٹ کھاتہ
-                </button>
+                </a>
             <?php endif; ?>
         </form>
     </div>

@@ -93,9 +93,9 @@ $net_profit = $total_comm - $total_expenses;
         <form method="GET" action="daily_summary.php" class="d-flex align-items-center gap-2">
             <label class="small text-muted fw-bold">تاریخ:</label>
             <input type="date" name="date" class="form-control form-control-sm" value="<?= htmlspecialchars($date) ?>" onchange="this.form.submit()">
-            <button type="button" onclick="window.print()" class="btn btn-sm btn-outline-secondary">
-                <i class="fa-solid fa-print"></i> پرنٹ موازنہ
-            </button>
+            <a href="print_daily_summary.php?date=<?= urlencode($date) ?>" target="_blank" class="btn btn-sm btn-outline-success">
+                <i class="fa-solid fa-print"></i> پرنٹ پیج کھولیں
+            </a>
         </form>
     </div>
 

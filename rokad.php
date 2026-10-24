@@ -157,9 +157,9 @@ $today_profit = $today_comm - $exp_today;
         <form method="GET" action="rokad.php" class="d-flex align-items-center gap-2">
             <label class="small text-muted fw-bold">تاریخ منتخب کریں:</label>
             <input type="date" name="date" class="form-control form-control-sm" value="<?= htmlspecialchars($date) ?>" onchange="this.form.submit()">
-            <button type="button" onclick="window.print()" class="btn btn-sm btn-outline-secondary">
-                <i class="fa-solid fa-print"></i> پرنٹ روکڑ
-            </button>
+            <a href="print_rokad.php?date=<?= urlencode($date) ?>" target="_blank" class="btn btn-sm btn-outline-success">
+                <i class="fa-solid fa-print"></i> پرنٹ پیج کھولیں
+            </a>
         </form>
     </div>
 
